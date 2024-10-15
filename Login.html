@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="styleLogin.css">
+</head>
+<body>
+    
+    <div id="app">
+        <div class="login-container">
+
+
+            <H1>
+                Login
+            </H1>
+    
+              <br>
+              <input type="email" placeholder="Ingrese su correo electronico">
+              <input type="password"  placeholder="Ingrese su contraseña">
+    
+              <button > Iniciar Sesion</button></button>
+        </div>
+
+    </div>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue
+        
+        createApp({
+          setup() {
+            const text = ref('')
+            const password =ref('')
+            return {
+              text,
+              password
+
+            }
+          }
+        }).mount('#app')
+      </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+
+#app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #E3F2FD; 
+    margin: 0;
+}
+
+
+.login-container {
+    background-color: #FFFFFF; 
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    text-align: center;
+    width: 300px;
+}
+
+
+.login-container h1 {
+    color: #64B5F6; 
+    margin-bottom: 20px;
+}
+
+/* Estilo de los inputs */
+.login-container input[type="email"],
+.login-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #B3E5FC; 
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #F1F8E9; 
+}
+
+/* Estilo del botón */
+.login-container button {
+    background-color: #64B5F6; 
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; 
+}
+
+
+.login-container button:hover {
+    background-color: #42A5F5; 
+}
