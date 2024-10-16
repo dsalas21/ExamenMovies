@@ -10,35 +10,87 @@
     
     <div id="app">
         <div class="login-container">
-
-
-            <H1>
-                Login
-            </H1>
-    
-              <br>
-              <input type="email" placeholder="Ingrese su correo electronico">
-              <input type="password"  placeholder="Ingrese su contraseña">
-    
-              <button > Iniciar Sesion</button></button>
+            <H1>Login</H1>
+            <br>
+            <input v-model="username" type="text" placeholder="Ingrese su nombre de usuario">
+            <input v-model="password" type="password" placeholder="Ingrese su contraseña">
+            <button @click="login">Iniciar Sesión</button>
         </div>
-
     </div>
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         const { createApp, ref } = Vue
-        
+
         createApp({
           setup() {
-            const text = ref('')
-            const password =ref('')
-            return {
-              text,
-              password
+            const username = ref('')
+            const password = ref('')
+            const apiKey = '9613de54abfdef52d6a1ca920c995060'; 
 
+            const login = async () => {
+              try {
+                // Obtener request token
+                let response = await fetch(`https://api.themoviedb.org/3/authentication/token/new?api_key=${apiKey}`);
+                let data = await response.json();
+                const requestToken = data.request_token;
+
+                //Valida las credenciales
+                let validateResponse = await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    username: username.value,
+                    password: password.value,
+                    request_token: requestToken
+                  })
+                });
+
+                let validateData = await validateResponse.json();
+
+                if (validateData.success) {
+                  console.log('Token validado exitosamente:', validateData.request_token);
+
+                  //Genera la sesion
+                  let sessionResponse = await fetch(`https://api.themoviedb.org/3/authentication/session/new?api_key=${apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      request_token: validateData.request_token
+                    })
+                  });
+
+                  let sessionData = await sessionResponse.json();
+
+                  if (sessionData.success) {
+                    console.log('Sesión iniciada correctamente, token de sesión:', sessionData.session_id);
+
+                    //Guardar el token de sesion en localStorage
+                    localStorage.setItem('session_id', sessionData.session_id);
+
+                    window.location.href = 'home.html';
+                  } else {
+                    console.error('Error al iniciar sesión:', sessionData.status_message);
+                  }
+                } else {
+                  console.error('Error al validar el token:', validateData.status_message);
+                }
+              } catch (error) {
+                console.error('Error durante el inicio de sesión:', error);
+              }
+            }
+
+            return {
+              username,
+              password,
+              login
             }
           }
         }).mount('#app')
-      </script>
+    </script>
 </body>
 </html>
