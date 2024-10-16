@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styleHome.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <nav>
+            <div class="searchBar">
+                <input type="text" id="search" placeholder="Buscar película o serie">
+                <button @click="">Buscar Aleatorio</button>
+            </div>
+            <button @click="">Cerrar Sesión</button>
+        </nav>
+        <div class="home-container">
+<!-- 
+            <div class="poster-container">
+                <h2>Bienvenido a esta página de películas</h2>
+                <h3>Comienza a explorar ya!</h3>
+                <div v-if="poster">
+                    <img :src="`https://image.tmdb.org/t/p/w500/${poster.file_path}`" alt="Movie Poster">
+                </div>
+                <p v-else>Buscando póster de una película aleatoria...</p>
+            </div> -->
+
+
+            <h3>Peliculas populares de hoy</h3>
+            <div class="moviesTrendig-container">
+                <div class="card" v-for="movie in trendingMovies" :key="movie.id" @click="hola">
+                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
+                  <div class="bar">
+                      <h3 class="title">{{ movie.title }}</h3>
+                    <div class="rating">{{ movie.vote_average }}</div>
+                    <div class="fecha">{{ movie.release_date }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <h3>
+                Lo mas popular
+              </h3>
+                
+                </div>
+            </div>
+              
+              
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue;
+    
+        createApp({
+          setup() {
+            const    trendingMovies = ref([]);
+    
+            const fetchTrendingMovies = async () => {
+              try {
+                const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?language=en-US',   
+     {
+                  headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
+    
+                    'accept': 'application/json'
+                  }
+                });
+                const data = await response.json();
+                trendingMovies.value = data.results;
+              } catch (error) {
+                console.error('Error al obtener películas en tendencia:', error);
+              }
+            };
+    
+            fetchTrendingMovies();
+    
+            return {
+              trendingMovies
+            };
+          },
+          methods:{
+
+            hola(){
+
+                console.log("hola")
+
+            }
+
+
+
+          }
+
+        }).mount('#app');
+      </script>
+</body>
+</html>
