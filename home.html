@@ -14,7 +14,7 @@
                 <input type="text" id="search" placeholder="Buscar película o serie">
                 <button @click="">Buscar Aleatorio</button>
             </div>
-            <button @click="">Cerrar Sesión</button>
+            <button @click="logout">Cerrar Sesión</button>
         </nav>
         <div class="home-container">
 <!-- 
@@ -76,9 +76,16 @@
             };
     
             fetchTrendingMovies();
+
+              // Función de cerrar sesión
+              const logout = () => {
+              localStorage.removeItem('session_id');
+              window.location.href = 'Login.html';
+            };
     
             return {
-              trendingMovies
+              trendingMovies,
+              logout
             };
           },
           methods:{
