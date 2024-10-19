@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles de la Película</title>
+    <link rel="stylesheet" href="styleMovieDetails.css">
+ </head>
+ <body>
+    <div id="app">
+        <nav class="navbar">
+            <button class="home-btn" @click="goHome">Volver a Home</button>
+        </nav>
+
+        <div class="movie-details-container" v-if="movie.title">
+            <h1 class="movie-title">{{ movie.title }}</h1>
+            <button class="favorite-btn" @click="toggleFavorite">{{ isFavorite ? 'Eliminar de Favoritos' : 'Agregar a Favoritos' }}</button>
+            <img :src="moviePoster" class="movie-poster" :alt="movie.title ? 'Poster de la película ' + movie.title : 'Poster no disponible'">
+            <p class="movie-info">{{ movie.overview }}</p>
+            <p class="movie-info"><strong>Fecha de estreno:</strong> {{ movie.release_date }}</p>
+            <p class="movie-info"><strong>Duración:</strong> {{ movie.runtime }} minutos</p>
+            <p class="movie-info"><strong>Puntuación:</strong> {{ movie.vote_average }}/10</p>
+            <p class="movie-info"><strong>Categorías:</strong> {{ genres }}</p>
+
+            <div class="trailer-container">
+             <iframe v-if="trailer" :src="trailerUrl" width="560" height="315" allowfullscreen :title="movie.title ? 'Tráiler de ' + movie.title : 'Tráiler no disponible'"></iframe>
+                <p v-else>No hay tráiler disponible.</p>
+            </div>
+
+            <div class="movie-cast">
+                <h2>Reparto</h2>
+                <ul>
+                    <li v-for="member in cast" :key="member.cast_id">{{ member.name }} como {{ member.character }}</li>
+                </ul>
+            </div>
+
+            <div class="keywords-container">
+                <h2>Palabras clave</h2>
+                <ul>
+                    <li v-for="keyword in keywords" :key="keyword.id">{{ keyword.name }}</li>
+                </ul>
+            </div>
+
+            <div class="recommendations-container">
+                <h2>Recomendaciones</h2>
+                <ul>
+                    <li v-for="recommendation in recommendations" :key="recommendation.id">
+                        <img :src="'https://image.tmdb.org/t/p/w154' + recommendation.poster_path" :alt="'Poster de ' + recommendation.title">
+                        {{ recommendation.title }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div v-else>ID de película no proporcionado o error al cargar.</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                apiKey: '9613de54abfdef52d6a1ca920c995060',
+                movieId: new URLSearchParams(window.location.search).get('id'),
+                movie: {},
+                cast: [],
+                keywords: [],
+                recommendations: [],
+                trailer: null,
+                isFavorite: false
+            },
+            computed: {
+                genres() {
+                    return this.movie.genres ? this.movie.genres.map(genre => genre.name).join(', ') : '';
+                },
+                moviePoster() {
+                    return this.movie.poster_path ? `https://image.tmdb.org/t/p/w500${this.movie.poster_path}` : '';
+                },
+                trailerUrl() {
+                    return this.trailer ? `https://www.youtube.com/embed/${this.trailer.key}` : '';
+                }
+            },
+            methods: {
+                fetchMovieDetails() {
+                    fetch(`https://api.themoviedb.org/3/movie/${this.movieId}?api_key=${this.apiKey}&language=es-ES`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.movie = data;
+                        })
+                        .catch(error => console.error('Error al obtener los detalles de la película:', error));
+                },
+                fetchCast() {
+                    fetch(`https://api.themoviedb.org/3/movie/${this.movieId}/credits?api_key=${this.apiKey}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.cast = data.cast;
+                        })
+                        .catch(error => console.error('Error al obtener el reparto:', error));
+                },
+                fetchKeywords() {
+                    fetch(`https://api.themoviedb.org/3/movie/${this.movieId}/keywords?api_key=${this.apiKey}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.keywords = data.keywords;
+                        })
+                        .catch(error => console.error('Error al obtener palabras clave:', error));
+                },
+                fetchTrailer() {
+                    fetch(`https://api.themoviedb.org/3/movie/${this.movieId}/videos?api_key=${this.apiKey}&language=es-ES`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.trailer = data.results.find(video => video.type === 'Trailer' && video.site === 'YouTube');
+                        })
+                        .catch(error => console.error('Error al obtener el tráiler:', error));
+                },
+                fetchRecommendations() {
+                    fetch(`https://api.themoviedb.org/3/movie/${this.movieId}/recommendations?api_key=${this.apiKey}&language=es-ES`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.recommendations = data.results;
+                        })
+                        .catch(error => console.error('Error al obtener recomendaciones:', error));
+                },
+                toggleFavorite() {
+                    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+                    if (!favorites.includes(this.movieId)) {
+                        favorites.push(this.movieId);
+                        localStorage.setItem('favorites', JSON.stringify(favorites));
+                        this.isFavorite = true;
+                        alert('Película agregada a favoritos');
+                    } else {
+                        favorites = favorites.filter(id => id !== this.movieId);
+                        localStorage.setItem('favorites', JSON.stringify(favorites));
+                        this.isFavorite = false;
+                        alert('Película eliminada de favoritos');
+                    }
+                },
+                checkIfFavorite() {
+                    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+                    this.isFavorite = favorites.includes(this.movieId);
+                },
+                goHome() {
+                    window.location.href = 'home.html';
+                }
+            },
+            mounted() {
+                if (this.movieId) {
+                    this.fetchMovieDetails();
+                    this.fetchCast();
+                    this.fetchKeywords();
+                    this.fetchTrailer();
+                    this.fetchRecommendations();
+                    this.checkIfFavorite();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
