@@ -27,12 +27,16 @@
                 <p v-else>No hay tráiler disponible.</p>
             </div>
 
-            <div class="movie-cast">
-                <h2>Reparto</h2>
-                <ul>
-                    <li v-for="member in cast" :key="member.cast_id">{{ member.name }} como {{ member.character }}</li>
-                </ul>
-            </div>
+           <div class="movie-cast">
+    <h2>Reparto</h2>
+    <ul>
+        <li v-for="member in cast" :key="member.cast_id">
+            <img v-if="member.profile_path" :src="'https://image.tmdb.org/t/p/w154' + member.profile_path" :alt="member.name ? 'Imagen de ' + member.name : 'Imagen no disponible'">
+            <p v-else>Imagen no disponible</p>
+            {{ member.name }} como {{ member.character }}
+        </li>
+    </ul>
+</div>
 
             <div class="keywords-container">
                 <h2>Palabras clave</h2>
