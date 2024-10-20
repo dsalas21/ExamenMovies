@@ -110,18 +110,20 @@
       </h3>
 
       <div class="tvPopular-container">
-        <div class="card" v-for="tv in popularTv" :key="tv.id" @click="hola">
-          <div class="card-image"
-            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${tv.poster_path})` }"></div>
-          <div class="bar">
-            <h3 class="title">{{ tv.original_name }}</h3>
-            <div class="rating">
-              <img src="corazon.png" >
-              {{ tv.vote_average }}</div>
-            <div class="fecha">{{ tv.first_air_date }}</div>
-          </div>
+        <div class="card" v-for="tv in popularTv" :key="tv.id" @click="redirectToDetails(tv.id)">
+            <div class="card-image"
+                :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${tv.poster_path})` }"></div>
+            <div class="bar">
+                <h3 class="title">{{ tv.original_name }}</h3>
+                <div class="rating">
+                    <img src="corazon.png">
+                    {{ tv.vote_average }}
+                </div>
+                <div class="fecha">{{ tv.first_air_date }}</div>
+            </div>
         </div>
-      </div>
+    </div>
+    
 
 
 
@@ -240,7 +242,12 @@
         },
         hola2() {
           console.log("hola2")
+        },
+        redirectToDetails(tvId) {
+          window.location.href = `DetalleSerie.html?id=${tvId}`;
         }
+
+        
 
 
 

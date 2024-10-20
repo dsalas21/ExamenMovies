@@ -51,11 +51,11 @@
 
         <div class="seasons-container">
 
-            <div class="season-card" v-for="season in seasons" :key="season.id">
+            <div class="season-card" v-for="season in seasons" :key="season.id" @click="redirectToDetailsSeason(season.season_number,serie.name,serie.poster_path)">
                 <h3>Temporada {{ season.season_number }}</h3>
                 <p>Fecha de estreno: {{ season.air_date }}</p>
                 <p>Número de episodios: {{ season.episode_count }}</p>
-                <img :src="season.poster_path ? 'https://image.tmdb.org/t/p/w500' + season.poster_path : ''" 
+                <img :src="season.poster_path ? 'https://image.tmdb.org/t/p/w500' + season.poster_path : 'lostImg.png'" 
                     alt="Poster de la Temporada" 
                     class="season-poster">
                 <p>{{ season.overview }}</p>
@@ -68,7 +68,7 @@
             <!-- <button @click="scrollLeft">←</button> -->
             <div class="cast-carousel">
                 <div class="cast-member" v-for="member in cast" :key="member.id">
-                    <img :src="member.profile_path ? 'https://image.tmdb.org/t/p/w500' + member.profile_path : ''" 
+                    <img :src="member.profile_path ? 'https://image.tmdb.org/t/p/w500' + member.profile_path : 'unknowPeople.png'" 
                          alt="Foto de {{ member.name }}" 
                          class="cast-member-photo">
                     <h3>{{ member.name }}</h3>
@@ -98,6 +98,8 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         const { createApp, ref } = Vue;
+        const urlParams = new URLSearchParams(window.location.search);
+        const tvId = urlParams.get('id');
     
         createApp({
             setup() {
@@ -227,19 +229,18 @@
 
 
 
-                 var od = 1
-                fetchRecommendations(od);
-                fetchCast(od);
+                fetchRecommendations(tvId);
+                fetchCast(tvId);
 
 
-                fetchTrailers(od); 
+                fetchTrailers(tvId); 
 
 
-                fetchSerie(od); 
+                fetchSerie(tvId); 
 
 
               
-                fetchAllSeasons(od);
+                fetchAllSeasons(tvId);
 
 
                 return {
@@ -261,6 +262,9 @@
                 scrollRight() {
                     const carousel = this.$el.querySelector('.cast-carousel');
                     carousel.scrollBy({ left: 200, behavior: 'smooth' });
+                },
+                redirectToDetailsSeason(idSeason,nameSeason,imgSeason) {
+                    window.location.href = `DetalleTemporada.html?id=${tvId}&idSeason=${idSeason}&nameSeason=${nameSeason}&imgSeason=${imgSeason}`;
                 }
             }
 
