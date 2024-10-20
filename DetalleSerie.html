@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styleDetalleSerie.css">
+
+</head>
+<body>
+
+    <div id="app">
+        <div id="divDetailMovie">
+            <div class="background">
+                <img :src="'https://image.tmdb.org/t/p/w500' + serie.poster_path" alt="Movie Poster">
+                <div class="overlay"></div>
+
+            </div>
+            <div class="content">
+                <h2>{{ serie.name }}</h2>
+                <div class="movie-info">
+                    <div class="movie-card">
+                        <img :src="'https://image.tmdb.org/t/p/w500' + serie.poster_path" alt="Movie Poster">
+                    </div>
+                    <div class="movie-details"> 
+                        <p id="txtCategorias">
+                            <strong>Categorías: </strong>
+                            <span v-for="(genre, index) in serie.genres" :key="genre.id">
+                                {{ genre.name }}<span v-if="index < serie.genres.length - 1">, </span>
+                            </span>
+                        </p>
+                        <p class="rating">
+                            <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.round(serie.vote_average) }">&#9733;</span>
+                            <span class="rating-value">{{ serie.vote_average }}</span>
+                        </p>
+                        <p class="overview">{{ serie.overview }}</p>
+                    </div>
+                </div>
+                <input v-model="userRating" type="number" min="0" max="10" placeholder="Calificación (0-10)">
+                <button @click="rateMovie">Añadir Rate</button>
+                <button @click="deleteRate">Eliminar Rate</button>
+            </div>
+            
+            
+        </div>
+
+        <div class="trailer">
+            <div class="trailer-container" id="trailerContainer"></div>
+        </div>
+        <h2 id="txtTemporadas">Temporadas</h2>
+
+        <div class="seasons-container">
+
+            <div class="season-card" v-for="season in seasons" :key="season.id">
+                <h3>Temporada {{ season.season_number }}</h3>
+                <p>Fecha de estreno: {{ season.air_date }}</p>
+                <p>Número de episodios: {{ season.episode_count }}</p>
+                <img :src="season.poster_path ? 'https://image.tmdb.org/t/p/w500' + season.poster_path : ''" 
+                    alt="Poster de la Temporada" 
+                    class="season-poster">
+                <p>{{ season.overview }}</p>
+            </div>
+        </div>
+
+
+        <div class="cast-container">
+            <h2>Reparto</h2>
+            <!-- <button @click="scrollLeft">←</button> -->
+            <div class="cast-carousel">
+                <div class="cast-member" v-for="member in cast" :key="member.id">
+                    <img :src="member.profile_path ? 'https://image.tmdb.org/t/p/w500' + member.profile_path : ''" 
+                         alt="Foto de {{ member.name }}" 
+                         class="cast-member-photo">
+                    <h3>{{ member.name }}</h3>
+                    <p>Rol: {{ member.character }}</p>
+                </div>
+            </div>
+          <!--   <button @click="scrollRight">→</button> -->
+        </div>
+
+
+
+        <div class="recommendations-container">
+            <h2>Recomendaciones</h2>
+            <div class="recommendations-carousel">
+                <div class="recommendation" v-for="rec in recomendaciones" :key="rec.id">
+
+                    <img :src="rec.poster_path ? 'https://image.tmdb.org/t/p/w500' + rec.poster_path : ''" 
+                        alt="Poster de {{ rec.name }}" 
+                        class="recommendation-poster">
+                    <h3>{{ rec.name }}</h3>
+                  
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue;
+    
+        createApp({
+            setup() {
+                const serie = ref({});
+                const seasons = ref({}); 
+                const cast = ref([]); 
+                const carouselRef = ref(null); 
+                const recomendaciones = ref({});
+
+              
+
+
+                const fetchSerie = async (id) => {
+                try {
+                    const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?language=en-US`, {
+                    headers: {
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+                        'accept': 'application/json'
+                    }
+                    });
+
+                    if (!response.ok) {
+                    throw new Error('Error al obtener la serie');
+                    }
+
+                    const data = await response.json();
+                    serie.value = data;
+                } catch (error) {
+                    console.error('Error al obtener la serie:', error);
+                }
+                };
+
+                const fetchTrailers = async (tvId) => {
+                   
+                    const apiKey = '8a758308cbfef2cba726df108d9563fa';
+                    
+                    try {
+                        const response = await fetch( `https://api.themoviedb.org/3/tv/${tvId}/videos?api_key=${apiKey}&language=en-US`, {
+                        headers: {
+                            'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+                            'accept': 'application/json'
+                        }
+                        });
+
+                        if (!response.ok) {
+                        throw new Error('Error al obtener el trailer');
+                        }
+
+                        const data = await response.json();
+                       const trailers = data.results.filter(video => video.type === 'Trailer');
+
+                        const trailerContainer = document.getElementById('trailerContainer');
+                        trailers.forEach(trailer => {
+                            const trailerElement = document.createElement('div');
+                            trailerElement.className = 'trailer';
+                            trailerElement.innerHTML = `
+                                <h3>${trailer.name}</h3>
+                                <iframe width="320" height="180" src="https://www.youtube.com/embed/${trailer.key}" frameborder="0" allowfullscreen></iframe>
+                            `;
+                            trailerContainer.appendChild(trailerElement);
+                        });
+                    } catch (error) {
+                        console.error('Error al obtener la serie:', error);
+                    }
+                };
+
+
+                const fetchAllSeasons = async (tvId) => {
+                    const apiKey = '8a758308cbfef2cba726df108d9563fa';
+                    try {
+                        const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}?api_key=${apiKey}&language=en-US`);
+                        
+                        if (!response.ok) {
+                            throw new Error('Error al obtener la serie');
+                        }
+
+                        const data = await response.json();
+                        seasons.value = data.seasons.filter(season => season.season_number > 0);
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                };
+
+                const fetchCast = async (tvId) => {
+                    const apiKey = '8a758308cbfef2cba726df108d9563fa';
+                    try {
+                        const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/credits?api_key=${apiKey}&language=en-US`);
+                        
+                        if (!response.ok) {
+                            throw new Error('Error al obtener el reparto');
+                        }
+
+                        const data = await response.json();
+                        cast.value = data.cast; 
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                };
+
+                const scrollLeft = () => {
+                    const carousel = document.querySelector('.cast-carousel');
+                    carousel.scrollBy({ left: -200, behavior: 'smooth' });
+                };
+
+                const scrollRight = () => {
+                    const carousel = document.querySelector('.cast-carousel');
+                    carousel.scrollBy({ left: 200, behavior: 'smooth' });
+                };
+
+
+                const fetchRecommendations = async (tvId) => {
+                    const apiKey = '8a758308cbfef2cba726df108d9563fa';
+                    try {
+                        const response = await fetch(`https://api.themoviedb.org/3/tv/${tvId}/recommendations?api_key=${apiKey}&language=en-US`);
+                        
+                        if (!response.ok) {
+                            throw new Error('Error al obtener recomendaciones');
+                        }
+
+                        const data = await response.json();
+                        console.log("Recomendaciones:", data.results);
+                        recomendaciones.value = data.results; 
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                };
+
+
+
+                 var od = 1
+                fetchRecommendations(od);
+                fetchCast(od);
+
+
+                fetchTrailers(od); 
+
+
+                fetchSerie(od); 
+
+
+              
+                fetchAllSeasons(od);
+
+
+                return {
+                    serie,
+                    seasons,
+                    cast,
+                    cast,
+                    carouselRef,
+                    scrollLeft,
+                    scrollRight,
+                    recomendaciones
+                };
+            },
+            methods: {
+                scrollLeft() {
+                    const carousel = this.$el.querySelector('.cast-carousel');
+                    carousel.scrollBy({ left: -200, behavior: 'smooth' });
+                },
+                scrollRight() {
+                    const carousel = this.$el.querySelector('.cast-carousel');
+                    carousel.scrollBy({ left: 200, behavior: 'smooth' });
+                }
+            }
+
+
+        }).mount('#app');
+
+    </script>
+</body>
+</html>

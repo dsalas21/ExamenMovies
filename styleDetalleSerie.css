@@ -1,0 +1,348 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100%; 
+    background: linear-gradient(to bottom, rgb(29, 28, 28), rgb(120, 120, 120));
+}
+
+.background {
+    width: 100%; 
+    height: 60vh; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    z-index: 0; 
+}
+
+.background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    filter: blur(5px); 
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0; 
+    left: 0;
+    right: 0;
+    height: 100%; 
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent); 
+    z-index: 1; 
+}
+
+.content {
+    position: relative;
+    z-index: 2; 
+    color: white; 
+    padding: 20px; 
+    text-align: center; 
+    max-width: 800px;
+    margin: 20px auto; 
+}
+
+h2 {
+    color: rgb(255, 255, 255);
+    font-size: 3vw; 
+}
+
+.rating {
+    font-size: 2vw; 
+    margin-left: 0;
+    color: yellow;
+}
+
+.movie-info {
+    display: flex; 
+    align-items: flex-start; 
+    flex-direction: row; 
+    justify-content: flex-start;
+    flex-wrap: nowrap; 
+}
+.movie-card {
+    margin-right: 20px;
+}
+
+.movie-card img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.movie-details {
+    margin-left: 20px; 
+    max-width: 600px; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: -webkit-box; 
+    -webkit-box-orient: vertical; 
+    -webkit-line-clamp: 9; 
+    white-space: normal; 
+    margin-bottom: 10px;
+}
+.overview {
+    font-size: 20px; 
+}
+
+@media (max-width: 600px) {
+    .background {
+        height: 40vh; 
+    }
+
+    .movie-info {
+        flex-direction: column;
+    }
+
+    h2 {
+        font-size: 5vw;
+    }
+
+    .rating {
+        font-size: 3vw;
+    }
+
+    .overview {
+        font-size: 20px; 
+    }
+
+    input[type="number"] {
+        width: 80%; 
+    }
+
+    button {
+        width: 80%;
+        padding: 10px; 
+    }
+}
+
+@media (max-width: 768px) {
+    .movie-info {
+        flex-direction: column; 
+        align-items: center;
+    }
+
+    .movie-details {
+        margin-left: 0; 
+        text-align: center;
+    }
+}
+
+
+
+/*----------------INICIO TRAILER--------------------------*/
+
+.trailer-container {
+    font-size: 30px;
+    margin-top: 10%;
+    margin-left: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.trailer {
+    width: 90%;
+    max-width: 800px; 
+}
+
+.trailer iframe {
+    width: 100%; 
+    height: 340px;
+    border-radius: 5px;
+}
+
+
+/*-------------- FIN TRAILER*/
+
+
+.seasons-container {
+    margin: 20px;
+    color: white;
+}
+
+.season {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s;
+}
+
+.season:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+#txtCategorias{
+    font-size: 21px;
+}
+.season h3 {
+    color: #ffcc00; 
+}
+
+.season-poster {
+    width: 100%;
+    max-width: 200px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+
+
+/* --------------  series estilos */
+
+.seasons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#txtTemporadas {
+  color: rgb(255, 255, 255);
+  margin-top: 10%;
+  margin-left: 10%;
+  font-size: 50px;
+}
+.season-card {
+  background-color: rgb(54, 43, 43);
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease; 
+}
+
+.season-card:hover {
+  box-shadow: 0 0 55px rgba(60, 57, 57, 0.7); 
+  transform: scale(1.20); 
+}
+
+
+.season-card img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.season-card h2 {
+    font-size: 1.8em;
+    margin: 10px 0;
+    color: #ffffff;
+
+}
+
+.season-card p {
+    color: #ffffff;
+}
+
+h3{
+  color: rgb(255, 255, 255);
+}
+
+
+  /*--------------- fin estilos series*/
+
+  /*-------------------------    carrucel reparto*/
+  .cast-container {
+    width: 70%; 
+    margin: 0 auto; 
+    text-align: center; 
+}
+
+.cast-carousel {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth; 
+    padding: 10px; 
+    gap: 16px; 
+    max-width: 100%;
+    margin: 0 auto; 
+}
+
+.cast-member {
+    flex: 0 0 auto;
+    text-align: center; 
+    background-color: #dddddd8f;
+    border-radius: 3%; 
+    padding-top: 10px;
+    min-width: 120px; 
+}
+
+.cast-member-photo {
+    width: 100px;
+    height: auto; 
+    border-radius: 20%;
+}
+
+
+
+
+        button {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            margin: 0 5px; 
+        }
+
+        button:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+
+       
+
+
+        .recommendations-container {
+            margin: 20px;
+            color: white;
+        }
+
+.recommendations-container h2 {
+    font-size: 2.5em;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.recommendations-carousel {
+    display: flex;
+    overflow-x: auto; 
+    scroll-behavior: smooth;
+    padding: 10px;
+    width: 100%; 
+    max-width: 800px;
+    height: 300px;
+    margin: 0 auto; 
+    scrollbar-width: thin; 
+}
+
+.recommendation {
+    min-width: 200px; 
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    padding: 15px;
+    margin-right: 10px; 
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.recommendation:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.recommendation img {
+    max-width: 100%;
+    border-radius: 5px;
+    height: 80%; 
+}
+
+.recommendation h3 {
+    font-size: 1.5em;
+    margin: 10px 0;
+}
+
+.recommendation p {
+    font-size: 1em;
+    color: #ddd;
+}
