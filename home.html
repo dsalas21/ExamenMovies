@@ -1,220 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="styleHome.css">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300i,400" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="styleHome.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+
 </head>
+
 <body>
-    <div id="app">
-        <nav>
-            <button @click="">Cerrar Sesión</button>
-        </nav>
-        <br>
-        <div class="home-container">
+  <div id="app">
+    <nav>
+      <button @click="">Cerrar Sesión</button>
 
-          <div class="banner">
+      <img src="casa.png" @click="hola" class="clickable-image">
+      <div class="user">
 
-           
-            <div class="banner-content">
-              <!-- Imagen -->
-              <div class="banner-logo"   >
-                  
-              </div>
-              <!-- Texto del banner -->
-              <div class="banner-text">
-                  <h1>Bienvenido</h1>
-                  <h3>Encuentra la mejor selección de series y peliculas</h3>
-                  
-                  
-              </div>
+        <img src="usuario.png">
+        Sesion Iniciada como:
+      </div>
+
+
+    </nav>
+    <br>
+    <br>
+    <div class="home-container">
+
+      <div class="banner">
+
+
+        <div class="banner-content">
+          <!-- Imagen -->
+          <div class="banner-logo">
+
           </div>
+          <!-- Texto del banner -->
+          <div class="banner-text">
+            <h1>Bienvenido</h1>
+            <h3>Encuentra la mejor selección de series y peliculas</h3>
 
 
           </div>
+        </div>
+
+
+      </div>
 
 
 
 
 
-            <h3>Peliculas en Tendencia</h3>
-            <div class="moviesTrendig-container">
-                <div class="card" v-for="movie in trendingMovies" :key="movie.id" @click="hola">
-                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
-                  <div class="bar">
-                      <h3 class="title">{{ movie.title }}</h3>
-                    <div class="rating">{{ movie.vote_average }}</div>
-                    <div class="fecha">{{ movie.release_date }}</div>
-                  </div>
-                </div>
-              </div>
+      <h3>Peliculas en Tendencia</h3>
+      <div class="moviesTrendig-container">
+        <div class="card" v-for="movie in trendingMovies" :key="movie.id" @click="hola">
+          <div class="card-image"
+            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
+          <div class="bar">
+            <h3 class="title">{{ movie.title }}</h3>
+            <div class="rating">
+              <img src="corazon.png" >
+              {{ movie.vote_average }}   </div>
+            <div class="fecha">{{ movie.release_date }}</div>
+          </div>
+        </div>
+      </div>
 
-              <h3>
-                Las peliculas mas populares
-              </h3>
+      <h3>
+        Peliculas mas populares
+      </h3>
 
-              <div class="moviesPopular-container">
-                <div class="card" v-for="movie in popularMovies" :key="movie.id" @click="hola">
-                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
-                  <div class="bar">
-                      <h3 class="title">{{ movie.title }}</h3>
-                    <div class="rating">{{ movie.vote_average }}</div>
-                    <div class="fecha">{{ movie.release_date }}</div>
-                  </div>
-                </div>
-              </div>
-
-
-              <h3>
-                Peliculas en Cines
-              </h3>
-
-              <div class="moviesWatchNow-container">
-                <div class="card" v-for="movie in watchNowMovies" :key="movie.id" @click="hola">
-                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
-                  <div class="bar">
-                      <h3 class="title">{{ movie.title }}</h3>
-                    <div class="rating">{{ movie.vote_average }}</div>
-                    <div class="fecha">{{ movie.release_date }}</div>
-                  </div>
-                </div>
-              </div>
-
-              <h3>
-                Series mas populares
-              </h3>
-
-              <div class="tvPopular-container">
-                <div class="card" v-for="tv in popularTv" :key="tv.id" @click="hola">
-                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${tv.poster_path})` }"></div>
-                  <div class="bar">
-                      <h3 class="title">{{ tv.original_name }}</h3>
-                    <div class="rating">{{ tv.vote_average }}</div>
-                    <div class="fecha">{{ tv.first_air_date }}</div>
-                  </div>
-                </div>
-              </div>
+      <div class="moviesPopular-container">
+        <div class="card" v-for="movie in popularMovies" :key="movie.id" @click="hola">
+          <div class="card-image"
+            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
+          <div class="bar">
+            <h3 class="title">{{ movie.title }}</h3>
+            <div class="rating">
+              <img src="corazon.png" >
+              {{ movie.vote_average }}</div>
+            <div class="fecha">{{ movie.release_date }}</div>
+          </div>
+        </div>
+      </div>
 
 
-                
-                </div>
-            </div>
-              
-              
+      <h3>
+        Ver ahora
+      </h3>
+
+      <div class="moviesWatchNow-container">
+        <div class="card" v-for="movie in watchNowMovies" :key="movie.id" @click="hola">
+          <div class="card-image"
+            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
+          <div class="bar">
+            <h3 class="title">{{ movie.title }}</h3>
+            <div class="rating">
+              <img src="corazon.png" >
+              {{ movie.vote_average }}</div>
+            <div class="fecha">{{ movie.release_date }}</div>
+          </div>
+        </div>
+      </div>
+
+      <h3>
+        Series mas populares
+      </h3>
+
+      <div class="tvPopular-container">
+        <div class="card" v-for="tv in popularTv" :key="tv.id" @click="hola">
+          <div class="card-image"
+            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${tv.poster_path})` }"></div>
+          <div class="bar">
+            <h3 class="title">{{ tv.original_name }}</h3>
+            <div class="rating">
+              <img src="corazon.png" >
+              {{ tv.vote_average }}</div>
+            <div class="fecha">{{ tv.first_air_date }}</div>
+          </div>
+        </div>
+      </div>
+
+
+
     </div>
+  </div>
 
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script>
-        const { createApp, ref } = Vue;
-    
-        createApp({
-          setup() {
-            const    trendingMovies = ref([]);
-            const   popularMovies = ref([]);
-            const   watchNowMovies = ref([]);
-            const   popularTv = ref([]);
-    
-            const fetchTrendingMovies = async () => {
-              try {
-                const response = await fetch('https://api.themoviedb.org/3/trending/movie/week?language=es-MX', {
-                  headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
-    
-                    'accept': 'application/json'
-                  }
-                });
-                const data = await response.json();
-                trendingMovies.value = data.results;
-              } catch (error) {
-                console.error('Error al obtener películas en tendencia:', error);
+
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    const { createApp, ref } = Vue;
+
+    createApp({
+      setup() {
+        const trendingMovies = ref([]);
+        const popularMovies = ref([]);
+        const watchNowMovies = ref([]);
+        const popularTv = ref([]);
+
+
+        const fetchTrendingMovies = async () => {
+          try {
+            const response = await fetch('https://api.themoviedb.org/3/trending/movie/week?language=es-MX', {
+              headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+
+                'accept': 'application/json'
               }
-            };
+            });
+            const data = await response.json();
+            trendingMovies.value = data.results;
+            const randomMovie = data.results[Math.floor(Math.random() * data.results.length)];
 
-
-            const fetchPopularMovies = async () => {
-              try {
-                const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=es-MX&page=1', {
-                  headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
-    
-                    'accept': 'application/json'
-                  }
-                });
-                const data = await response.json();
-                popularMovies.value = data.results;
-              } catch (error) {
-                console.error('Error al obtener películas populares:', error);
-              }
-            };
-
-            const fetchPopularTv = async () => {
-              try {
-                const response = await fetch('https://api.themoviedb.org/3/tv/popular?language=es-MX&page=1', {
-                  headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
-    
-                    'accept': 'application/json'
-                  }
-                });
-                const data = await response.json();
-                popularTv.value = data.results;
-              } catch (error) {
-                console.error('Error al obtener películas populares:', error);
-              }
-            };
-
-            const fetchWatchNow = async () => {
-              try {
-                const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1', {
-                  headers: {
-                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
-    
-                    'accept': 'application/json'
-                  }
-                });
-                const data = await response.json();
-                watchNowMovies.value = data.results;
-              } catch (error) {
-                console.error('Error al obtener películas populares:', error);
-              }
-            };
-
-
-
-
-
-
-
-            fetchPopularMovies();
-            fetchTrendingMovies();
-            fetchWatchNow();
-            fetchPopularTv();
-    
-            return {
-              trendingMovies,
-              popularMovies,
-              popularTv,
-              watchNowMovies
-            };
-          },
-          methods:{
-
-            hola(){
-
-                console.log("hola")
-
-            },
-            hola2(){
-              console.log("hola2")
-            }
-
-
-
+            document.querySelector('.banner').style.backgroundImage = `url(https://image.tmdb.org/t/p/original/${randomMovie.poster_path})`;
+          } catch (error) {
+            console.error('Error al obtener películas en tendencia:', error);
           }
+        };
 
-        }).mount('#app');
-      </script>
+
+
+
+        const fetchPopularMovies = async () => {
+          try {
+            const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=es-MX&page=1', {
+              headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+
+                'accept': 'application/json'
+              }
+            });
+            const data = await response.json();
+            popularMovies.value = data.results;
+          } catch (error) {
+            console.error('Error al obtener películas populares:', error);
+          }
+        };
+
+        const fetchPopularTv = async () => {
+          try {
+            const response = await fetch('https://api.themoviedb.org/3/tv/popular?language=es-MX&page=1', {
+              headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+
+                'accept': 'application/json'
+              }
+            });
+            const data = await response.json();
+            popularTv.value = data.results;
+          } catch (error) {
+            console.error('Error al obtener películas populares:', error);
+          }
+        };
+
+        const fetchWatchNow = async () => {
+          try {
+            const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1', {
+              headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+
+                'accept': 'application/json'
+              }
+            });
+            const data = await response.json();
+            watchNowMovies.value = data.results;
+          } catch (error) {
+            console.error('Error al obtener películas populares:', error);
+          }
+        };
+
+
+
+
+
+
+
+        fetchPopularMovies();
+        fetchTrendingMovies();
+        fetchWatchNow();
+        fetchPopularTv();
+
+        return {
+          trendingMovies,
+          popularMovies,
+          popularTv,
+          watchNowMovies
+        };
+      },
+      methods: {
+
+        hola() {
+
+          console.log("hola")
+
+        },
+        hola2() {
+          console.log("hola2")
+        }
+
+
+
+      }
+
+    }).mount('#app');
+
+
+
+
+
+    let lastScrollTop = 0;
+    const navBar = document.querySelector('nav');
+
+    window.addEventListener('scroll', function () {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > lastScrollTop) {
+        
+        navBar.style.top = "-80px"; 
+      } else {
+        // Scrolling up
+        navBar.style.top = "0"; 
+      }
+
+      lastScrollTop = scrollTop;
+    });
+
+  </script>
 </body>
+
 </html>
