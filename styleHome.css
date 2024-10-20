@@ -1,5 +1,10 @@
 
 
+body{
+  background-color: rgb(111, 111, 111);
+}
+
+
 nav {
     display: flex;
     justify-content: space-between;
@@ -36,93 +41,194 @@ nav {
     box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.1);
     flex-grow: 1;
   }
+  
+  /* estilo banner */
+
+.banner {
+  background-color: #BBDEFB;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  animation: fadeIn 2s ease; 
+  animation-fill-mode: forwards; 
+  border-radius: 5px;
+}
+
+
+
+
+.banner-content {
+  text-align: center;
+  color: #1E88E5;
+}
+
+
+.banner-logo img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 20px;
+  animation: logoBounce 1.5s infinite; 
+}
+
+
+.banner-text h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  color: #0D47A1;
+  animation: slideInFromLeft 1s ease; 
+}
+
+
+.banner-text p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #1976D2; 
+  animation: slideInFromRight 1s ease; 
+}
+
+
+.cta-button {
+  background-color: #64B5F6; 
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease; 
+  animation: fadeIn 2s ease; 
+}
+
+
+.cta-button:hover {
+  background-color: #42A5F5;
+  transform: scale(1.05); 
+}
+
+/* Animaciones  */
+
+
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+      transform: translateX(-100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
+
+
+@keyframes slideInFromRight {
+  from {
+      transform: translateX(100%);
+      opacity: 0;
+  }
+  to {
+      transform: translateX(0);
+      opacity: 1;
+  }
+}
+
+
+@keyframes logoBounce {
+  0%, 100% {
+      transform: translateY(0);
+  }
+  50% {
+      transform: translateY(-10px);
+  }
+}
 
 
   /* estilo para las peliculas */
-
+  .moviesWatchNow-container,
+  .tvPopular-container,
+  .moviesPopular-container,
   .moviesTrendig-container {
-    position: -ms-page;
-    height: auto;
-    width: auto;
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    height: 380px;
+    width: auto; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
     margin: 40px;
-    
-    
-  }
-  
-  .card {
+    gap: 20px;
+    white-space: nowrap;
+}
+
+.card {
     display: flex;
     flex-direction: column;
-    height: 280px;
+    height: 300px;
     width: 250px;
     background-color: rgba(47, 170, 219, 0.5);
     border-radius: 10px;
     box-shadow: -1rem 0 3rem #000;
     transition: 0.4s ease-out;
-    position: relative;
-  
     text-align: center;
-
+    margin-top: 20px; 
     
-  }
-  
-  .card:not(:first-child) {
-      margin-left: -50px;
-  }
-  
-  .card:hover {
+    flex-shrink: 0;
+}
+
+.card:hover {
     transform: translateY(-20px);
     transition: 0.4s ease-out;
-  }
-  
-  .card:hover ~ .card {
-    position: relative;
-    left: 50px;
-    transition: 0.4s ease-out;
-  }
-  
-  .title {
+}
+
+.title {
     color: rgb(0, 0, 0);
     font-weight: 300;
     font-size: 16px;
     margin-top: 10px; 
-  }
-  
-  .bar {
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+}
+
+.bar {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
-  }
-  .rating,
-  .fecha {
-    font-size: 14px;
-  }
-  
+    overflow: hidden;
+}
 
-  
-  .card-image {
-   
+.rating,
+.fecha {
+    font-size: 14px;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis
+}
+
+.card-image {
     width: 100%;
-    height: 180px; 
+    height: 210px; 
     background-position: center;
     background-size: cover;
-   
     border-radius: 5px;
-  }
-  
-  .stroke {
+    flex-shrink: 0;
+}
+
+.stroke {
     stroke: white;
     stroke-dasharray: 360;
     stroke-dashoffset: 360;
     transition: 0.6s ease-out;
-  }
-  
+}
 
-  
-  .card:hover .stroke {
+.card:hover .stroke {
     stroke-dashoffset: 100;
     transition: 0.6s ease-out;
-  }
+}

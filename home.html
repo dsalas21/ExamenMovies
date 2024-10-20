@@ -10,25 +10,36 @@
 <body>
     <div id="app">
         <nav>
-            <div class="searchBar">
-                <input type="text" id="search" placeholder="Buscar película o serie">
-                <button @click="">Buscar Aleatorio</button>
-            </div>
-            <button @click="logout">Cerrar Sesión</button>
+            <button @click="">Cerrar Sesión</button>
         </nav>
+        <br>
         <div class="home-container">
-<!-- 
-            <div class="poster-container">
-                <h2>Bienvenido a esta página de películas</h2>
-                <h3>Comienza a explorar ya!</h3>
-                <div v-if="poster">
-                    <img :src="`https://image.tmdb.org/t/p/w500/${poster.file_path}`" alt="Movie Poster">
-                </div>
-                <p v-else>Buscando póster de una película aleatoria...</p>
-            </div> -->
+
+          <div class="banner">
+
+           
+            <div class="banner-content">
+              <!-- Imagen -->
+              <div class="banner-logo"   >
+                  
+              </div>
+              <!-- Texto del banner -->
+              <div class="banner-text">
+                  <h1>Bienvenido</h1>
+                  <h3>Encuentra la mejor selección de series y peliculas</h3>
+                  
+                  
+              </div>
+          </div>
 
 
-            <h3>Peliculas populares de hoy</h3>
+          </div>
+
+
+
+
+
+            <h3>Peliculas en Tendencia</h3>
             <div class="moviesTrendig-container">
                 <div class="card" v-for="movie in trendingMovies" :key="movie.id" @click="hola">
                   <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
@@ -41,8 +52,52 @@
               </div>
 
               <h3>
-                Lo mas popular
+                Las peliculas mas populares
               </h3>
+
+              <div class="moviesPopular-container">
+                <div class="card" v-for="movie in popularMovies" :key="movie.id" @click="hola">
+                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
+                  <div class="bar">
+                      <h3 class="title">{{ movie.title }}</h3>
+                    <div class="rating">{{ movie.vote_average }}</div>
+                    <div class="fecha">{{ movie.release_date }}</div>
+                  </div>
+                </div>
+              </div>
+
+
+              <h3>
+                Peliculas en Cines
+              </h3>
+
+              <div class="moviesWatchNow-container">
+                <div class="card" v-for="movie in watchNowMovies" :key="movie.id" @click="hola">
+                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
+                  <div class="bar">
+                      <h3 class="title">{{ movie.title }}</h3>
+                    <div class="rating">{{ movie.vote_average }}</div>
+                    <div class="fecha">{{ movie.release_date }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <h3>
+                Series mas populares
+              </h3>
+
+              <div class="tvPopular-container">
+                <div class="card" v-for="tv in popularTv" :key="tv.id" @click="hola">
+                  <div class="card-image" :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${tv.poster_path})` }"></div>
+                  <div class="bar">
+                      <h3 class="title">{{ tv.original_name }}</h3>
+                    <div class="rating">{{ tv.vote_average }}</div>
+                    <div class="fecha">{{ tv.first_air_date }}</div>
+                  </div>
+                </div>
+              </div>
+
+
                 
                 </div>
             </div>
@@ -57,11 +112,13 @@
         createApp({
           setup() {
             const    trendingMovies = ref([]);
+            const   popularMovies = ref([]);
+            const   watchNowMovies = ref([]);
+            const   popularTv = ref([]);
     
             const fetchTrendingMovies = async () => {
               try {
-                const response = await fetch('https://api.themoviedb.org/3/trending/movie/day?language=en-US',   
-     {
+                const response = await fetch('https://api.themoviedb.org/3/trending/movie/week?language=es-MX', {
                   headers: {
                     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
     
@@ -74,18 +131,72 @@
                 console.error('Error al obtener películas en tendencia:', error);
               }
             };
-    
-            fetchTrendingMovies();
 
-              // Función de cerrar sesión
-              const logout = () => {
-              localStorage.removeItem('session_id');
-              window.location.href = 'Login.html';
+
+            const fetchPopularMovies = async () => {
+              try {
+                const response = await fetch('https://api.themoviedb.org/3/movie/popular?language=es-MX&page=1', {
+                  headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
+    
+                    'accept': 'application/json'
+                  }
+                });
+                const data = await response.json();
+                popularMovies.value = data.results;
+              } catch (error) {
+                console.error('Error al obtener películas populares:', error);
+              }
             };
+
+            const fetchPopularTv = async () => {
+              try {
+                const response = await fetch('https://api.themoviedb.org/3/tv/popular?language=es-MX&page=1', {
+                  headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
+    
+                    'accept': 'application/json'
+                  }
+                });
+                const data = await response.json();
+                popularTv.value = data.results;
+              } catch (error) {
+                console.error('Error al obtener películas populares:', error);
+              }
+            };
+
+            const fetchWatchNow = async () => {
+              try {
+                const response = await fetch('https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1', {
+                  headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',   
+    
+                    'accept': 'application/json'
+                  }
+                });
+                const data = await response.json();
+                watchNowMovies.value = data.results;
+              } catch (error) {
+                console.error('Error al obtener películas populares:', error);
+              }
+            };
+
+
+
+
+
+
+
+            fetchPopularMovies();
+            fetchTrendingMovies();
+            fetchWatchNow();
+            fetchPopularTv();
     
             return {
               trendingMovies,
-              logout
+              popularMovies,
+              popularTv,
+              watchNowMovies
             };
           },
           methods:{
@@ -94,6 +205,9 @@
 
                 console.log("hola")
 
+            },
+            hola2(){
+              console.log("hola2")
             }
 
 
