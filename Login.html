@@ -30,59 +30,66 @@
 
             const login = async () => {
               try {
-                // Obtener request token
-                let response = await fetch(`https://api.themoviedb.org/3/authentication/token/new?api_key=${apiKey}`);
-                let data = await response.json();
-                const requestToken = data.request_token;
 
-                //Valida las credenciales
-                let validateResponse = await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({
-                    username: username.value,
-                    password: password.value,
-                    request_token: requestToken
-                  })
-                });
+                  let response = await fetch(`https://api.themoviedb.org/3/authentication/token/new?api_key=${apiKey}`);
+                  let data = await response.json();
+                  const requestToken = data.request_token;
 
-                let validateData = await validateResponse.json();
-
-                if (validateData.success) {
-                  console.log('Token validado exitosamente:', validateData.request_token);
-
-                  //Genera la sesion
-                  let sessionResponse = await fetch(`https://api.themoviedb.org/3/authentication/session/new?api_key=${apiKey}`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                      request_token: validateData.request_token
-                    })
+                  let validateResponse = await fetch(`https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          username: username.value,
+                          password: password.value,
+                          request_token: requestToken
+                      })
                   });
 
-                  let sessionData = await sessionResponse.json();
+                  let validateData = await validateResponse.json();
 
-                  if (sessionData.success) {
-                    console.log('Sesión iniciada correctamente, token de sesión:', sessionData.session_id);
+                  if (validateData.success) {
+                      console.log('Token validado exitosamente:', validateData.request_token);
 
-                    //Guardar el token de sesion en localStorage
-                    localStorage.setItem('session_id', sessionData.session_id);
+                      let sessionResponse = await fetch(`https://api.themoviedb.org/3/authentication/session/new?api_key=${apiKey}`, {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                              request_token: validateData.request_token
+                          })
+                      });
 
-                    window.location.href = 'home.html';
+                      let sessionData = await sessionResponse.json();
+
+                      if (sessionData.success) {
+                          console.log('Sesión iniciada correctamente, token de sesión:', sessionData.session_id);
+
+                          localStorage.setItem('session_id', sessionData.session_id);
+                          
+                          const accountIdResponse = await fetch(`https://api.themoviedb.org/3/account?api_key=${apiKey}&session_id=${sessionData.session_id}`);
+                          const accountData = await accountIdResponse.json();
+
+                          if (accountData.id) {
+                              localStorage.setItem('account_id', accountData.id);
+                          } else {
+                              console.error('Error al obtener account ID:', accountData.status_message);
+                          }
+
+                          window.location.href = 'home.html';
+                      } else {
+                          console.error('Error al iniciar sesión:', sessionData.status_message);
+                      }
                   } else {
-                    console.error('Error al iniciar sesión:', sessionData.status_message);
+                      console.error('Error al validar el token:', validateData.status_message);
                   }
-                } else {
-                  console.error('Error al validar el token:', validateData.status_message);
-                }
               } catch (error) {
-                console.error('Error durante el inicio de sesión:', error);
+                  console.error('Error durante el inicio de sesión:', error);
               }
-            }
+          };
+
 
             return {
               username,

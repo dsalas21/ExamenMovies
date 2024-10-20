@@ -14,7 +14,6 @@
             <div class="background">
                 <img :src="'https://image.tmdb.org/t/p/w500' + serie.poster_path" alt="Movie Poster">
                 <div class="overlay"></div>
-
             </div>
             <div class="content">
                 <h2>{{ serie.name }}</h2>
@@ -36,17 +35,27 @@
                         <p class="overview">{{ serie.overview }}</p>
                     </div>
                 </div>
-                <input v-model="userRating" type="number" min="0" max="10" placeholder="Calificación (0-10)">
-                <button @click="rateMovie">Añadir Rate</button>
-                <button @click="deleteRate">Eliminar Rate</button>
+                <input v-model="userRating" type="number" min="1" max="10" placeholder="Calificación (1-10)" class="rating-input">
+                <button @click="addRate(serie.id)" class="rate-button">Añadir Rate</button>                
+                <button @click="removeRate(serie.id)" class="remove-rate">Eliminar Rate</button>
+                <button @click="addFavoriteSerie(serie.id)" class="favorite-button add">Añadir a favoritos</button>
+                <button @click="removeFavoriteSerie(serie.id)" class="favorite-button remove">Quitar de favoritos</button>
             </div>
-            
-            
         </div>
-
+        
+       
         <div class="trailer">
             <div class="trailer-container" id="trailerContainer"></div>
         </div>
+
+       <h3 id="txtPalabrasClave">Palabras Clave</h3>
+        <div class="palabrasClave-container">
+            <h2>Encuentrame por</h2>
+                <div class="palabraClave" v-for="palabra in palabrasClave">
+                    <h3>{{ palabra.name }}</h3>
+                </div>
+        </div>  
+
         <h2 id="txtTemporadas">Temporadas</h2>
 
         <div class="seasons-container">
@@ -93,7 +102,19 @@
                 </div>
             </div>
         </div>  
+
+
+       
+
+
+
+
+
+        <div v-if="message" class="message">{{ message }}</div>
+
     </div>
+
+
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
@@ -108,6 +129,95 @@
                 const cast = ref([]); 
                 const carouselRef = ref(null); 
                 const recomendaciones = ref({});
+                const favoriteSeries = ref([]); 
+                const userRating = ref(0);
+                const message = ref('');
+                const palabrasClave = ref({}); 
+
+
+                const showMessage = (msg) => {
+                    message.value = msg;
+                    setTimeout(() => {
+                        message.value = '';
+                    }, 3000);
+                };
+
+                
+
+                const addRate = async (idSerie) => {
+
+                    const sessionId = localStorage.getItem('session_id');
+                    const apiKey = '9613de54abfdef52d6a1ca920c995060'; 
+                    const accountId = localStorage.getItem('account_id');
+
+                    if (!sessionId || !accountId) {
+                        console.error('No se puede agregar la calificación. Asegúrate de estar logueado.');
+                        return;
+                    }
+
+                    const addRateUrl = `https://api.themoviedb.org/3/tv/${idSerie}/rating?api_key=${apiKey}&session_id=${sessionId}`;
+                    const data = { value: userRating.value };
+
+                    if (userRating.value < 1) {
+                        showMessage("La calificación debe ser mayor que 0");
+                        return;
+                    }else{
+                        showMessage("Calificación agregada");
+                    }
+                   
+                        
+
+                    try {
+                        const response = await fetch(addRateUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            console.log('Calificación añadida:', result);
+                            userRating.value = 0; 
+                        } else {
+                            console.error('Error al añadir la calificación:', result.status_message);
+                        }
+                    } catch (error) {
+                        console.error('Error al añadir la calificación:', error);
+                    }
+                };
+
+                const removeRate = async (idSerie) => {
+                    const sessionId = localStorage.getItem('session_id');
+                    const apiKey = '9613de54abfdef52d6a1ca920c995060'; 
+                    const accountId = localStorage.getItem('account_id');
+
+                    if (!sessionId || !accountId) {
+                        console.error('No se puede eliminar la calificación. Asegúrate de estar logueado.');
+                        return;
+                    }
+
+                    const removeRateUrl = `https://api.themoviedb.org/3/tv/${idSerie}/rating?api_key=${apiKey}&session_id=${sessionId}`;
+                    const data = { value: 0 }; 
+
+                    showMessage("Calificación eliminada");
+                  
+
+                    try {
+                        const response = await fetch(removeRateUrl, {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            console.log('Calificación eliminada:', result);
+                            userRating.value = 0; 
+                        } else {
+                            console.error('Error al eliminar la calificación:', result.status_message);
+                        }
+                    } catch (error) {
+                        console.error('Error al eliminar la calificación:', error);
+                    }
+                };
 
               
 
@@ -227,21 +337,31 @@
                     }
                 };
 
+                const fetchKeywords = async (tvId) => {
+                    const apiKey = '8a758308cbfef2cba726df108d9563fa';
+                    const url = `https://api.themoviedb.org/3/tv/${tvId}/keywords?api_key=${apiKey}`;
 
+                    try {
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error('Error al obtener las palabras clave');
+                        }
+                        const data = await response.json();
 
+                        console.log("datosss:", data.results);
+                        palabrasClave.value = data.results; 
+                       // return data.keywords; 
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                };
+
+                fetchKeywords(tvId)
                 fetchRecommendations(tvId);
                 fetchCast(tvId);
-
-
                 fetchTrailers(tvId); 
-
-
                 fetchSerie(tvId); 
-
-
-              
                 fetchAllSeasons(tvId);
-
 
                 return {
                     serie,
@@ -251,7 +371,15 @@
                     carouselRef,
                     scrollLeft,
                     scrollRight,
-                    recomendaciones
+                    recomendaciones,
+                    favoriteSeries: [],
+                    addRate,
+                    removeRate,
+                    userRating,
+                    message,
+                    showMessage,
+                    palabrasClave
+                    
                 };
             },
             methods: {
@@ -265,7 +393,98 @@
                 },
                 redirectToDetailsSeason(idSeason,nameSeason,imgSeason) {
                     window.location.href = `DetalleTemporada.html?id=${tvId}&idSeason=${idSeason}&nameSeason=${nameSeason}&imgSeason=${imgSeason}`;
-                }
+                }, 
+              
+                removeFavoriteSerie(idSerie) {
+                    const sessionId = localStorage.getItem('session_id');
+                    const apiKey = '9613de54abfdef52d6a1ca920c995060';
+                    const accountId = localStorage.getItem('account_id');
+
+                    if (!sessionId || !accountId) {
+                        console.error('No se puede eliminar de favoritos. Asegúrate de estar logueado.', accountId);
+                        return;
+                    }
+
+                    const removeFromFavoritesUrl = `https://api.themoviedb.org/3/account/${accountId}/favorite?api_key=${apiKey}&session_id=${sessionId}`;
+                    const data = {
+                        media_type: 'tv',
+                        media_id: idSerie,
+                        favorite: false
+                    };
+
+                    fetch(removeFromFavoritesUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.favoriteSeries = this.favoriteSeries.filter(id => id !== idSerie); 
+
+                           this.showMessage("Favorito eliminado");
+
+                            console.log('Favorito eliminado:', data);
+                        } else {
+                            console.error('Error al eliminar de favoritos:', data.status_message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al eliminar de favoritos:', error);
+                    });
+                },
+
+                addFavoriteSerie(idSerie) {
+                    const sessionId = localStorage.getItem('session_id');
+                    const apiKey = '9613de54abfdef52d6a1ca920c995060';
+                    const accountId = localStorage.getItem('account_id');
+
+                    if (!sessionId || !accountId) {
+                        console.error('No se puede agregar a favoritos. Asegúrate de estar logueado.', accountId);
+                        return;
+                    }
+
+                    const addToFavoritesUrl = `https://api.themoviedb.org/3/account/${accountId}/favorite?api_key=${apiKey}&session_id=${sessionId}`;
+                    const data = {
+                        media_type: 'tv',
+                        media_id: idSerie,
+                        favorite: true
+                    };
+
+                    fetch(addToFavoritesUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            this.favoriteSeries.push(idSerie); 
+
+                            this.showMessage("Favorito Agregado");
+
+                            console.log('Favorito agregado:', data);
+                        } else {
+                            console.error('Error al agregar a favoritos:', data.status_message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error al agregar a favoritos:', error);
+                    });
+                },
+
+                showMessage(msg) {
+                    this.message = msg;
+                    setTimeout(() => {
+                        this.message = '';
+                    }, 3000); 
+                },
+
+
             }
 
 
