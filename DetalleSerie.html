@@ -41,7 +41,10 @@
                         <p id="txtCategorias">
                             <strong>Categorías: </strong>
                             <span v-for="(genre, index) in serie.genres" :key="genre.id">
-                                {{ genre.name }}<span v-if="index < serie.genres.length - 1">, </span>
+                                <a @click="redirectToGenre(genre.id, genre.name)" class="category-link">
+                                    {{ genre.name }}
+                                </a>
+                                <span v-if="index < serie.genres.length - 1">, </span>
                             </span>
                         </p>
                         <p class="rating">
@@ -64,12 +67,14 @@
             <div class="trailer-container" id="trailerContainer"></div>
         </div>
 
-       <h3 id="txtPalabrasClave">Palabras Clave</h3>
+        <h3 id="txtPalabrasClave">Palabras Clave</h3>
         <div class="palabrasClave-container">
             <h2>Encuentrame por</h2>
-                <div class="palabraClave" v-for="palabra in palabrasClave">
+            <div class="palabraClave" v-for="palabra in palabrasClave" :key="palabra.id">
+                <a @click="redirectToKeyword(palabra.id, palabra.name)" class="keyword-link">
                     <h3>{{ palabra.name }}</h3>
-                </div>
+                </a>
+            </div>
         </div>  
 
         <h2 id="txtTemporadas">Temporadas</h2>
@@ -341,6 +346,7 @@
                     const carousel = document.querySelector('.cast-carousel');
                     carousel.scrollBy({ left: 200, behavior: 'smooth' });
                 };
+                
 
 
                 const fetchRecommendations = async (tvId) => {
@@ -442,6 +448,11 @@
                     window.location.href = 'login.html'; 
                 },
 
+                redirectToGenre(genreId, genreName, type) {
+                    window.location.href = `DetalleCategoria.html?id=${genreId}&name=${genreName}&type=${type}`;
+                },    redirectToKeyword(keywordId, keywordName,type) {
+                    window.location.href = `DetallePalabraClave.html?id=${keywordId}&name=${keywordName}&type=${type}`;
+                },
 
 
         

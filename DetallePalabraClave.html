@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Palabra Clave</title>
+    <link rel="stylesheet" href="styleDetalle.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="app">
+        <nav>
+            <button @click="">Cerrar Sesión</button>
+            <img src="casa.png" @click="hola" class="clickable-image">
+            <div class="user">
+                <img src="usuario.png">
+            </div>
+        </nav>
+
+        <div class="home-container">
+            <h1>Populares en palabra clave: {{ keywordName }}</h1>
+            <div>
+                <label for="category-select">Filtrar por:</label>
+                <select id="category-select" v-model="category" @change="fetchData">
+                    <option value="movie" selected>Películas</option>
+                    <option value="tv">Series</option>
+                </select>
+            </div>
+
+            <div class="movies-container">
+                <div class="card" v-for="item in popularItems" :key="item.id">
+                    <div class="card-image" :style="{ backgroundImage: 'url(https://image.tmdb.org/t/p/w500/' + (item.poster_path || '') + ')' }"></div>
+                    <div class="card-details">
+                        <h3 class="title">{{ item.title || item.name }}</h3>
+                        <div class="fecha">{{ item.release_date || item.first_air_date }}</div>
+                        <div class="description">{{ item.overview }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="load-more" @click="loadMore">Mostrar más resultados</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const { createApp, ref } = Vue;
+        const urlParams = new URLSearchParams(window.location.search);
+        const keywordId = urlParams.get('id');
+        const keywordName = urlParams.get('name');
+        const type = 'movie';
+
+        createApp({
+            setup() {
+                const category = ref(type);
+                const popularItems = ref([]);
+                const page = ref(1);
+                const keyword = ref(keywordId);
+
+                const fetchData = async () => {
+                    page.value = 1;
+                    popularItems.value = [];
+                    await loadItems(category.value);
+                };
+
+                const loadItems = async (type) => {
+                    let endpoint;
+                    endpoint = type === 'movie'
+                        ? `https://api.themoviedb.org/3/discover/movie?api_key=8a758308cbfef2cba726df108d9563fa&with_keywords=${keyword.value}&sort_by=popularity.desc&page=${page.value}`
+                        : `https://api.themoviedb.org/3/discover/tv?api_key=8a758308cbfef2cba726df108d9563fa&with_keywords=${keyword.value}&sort_by=popularity.desc&page=${page.value}`;
+
+                    try {
+                        const response = await fetch(endpoint, {
+                            headers: {
+                                'accept': 'application/json'
+                            }
+                        });
+                        const data = await response.json();
+                        if (data.results && data.results.length > 0) {
+                            popularItems.value.push(...data.results);
+                        } else {
+                            console.warn('No se encontraron resultados.');
+                        }
+                    } catch (error) {
+                        console.error('Error al obtener datos populares:', error);
+                    }
+                };
+
+                const loadMore = async () => {
+                    page.value += 1;
+                    await loadItems(category.value);
+                };
+                const logout = () => {
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('token');
+                    window.location.href = 'Login.html';
+                };
+
+                const goHome = () => {
+                    window.location.href = 'home.html';
+                };
+
+                fetchData();
+                return { popularItems, category, loadMore, keywordName, fetchData, logout, goHome };
+            }
+        }).mount('#app');
+    </script>
+</body>
+
+</html>

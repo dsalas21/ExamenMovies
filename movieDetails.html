@@ -33,7 +33,9 @@
                         <p id="txtCategorias">
                             <strong>Categorías: </strong>
                             <span v-for="(genre, index) in movie.genres" :key="genre.id">
-                                {{ genre.name }}<span v-if="index < movie.genres.length - 1">, </span>
+                                <a href="#" @click.prevent="goToGenreDetails(genre.id, genre.name, 'movie')">
+                                    {{ genre.name }}
+                                </a><span v-if="index < movie.genres.length - 1">, </span>
                             </span>
                         </p>
                         <p class="rating">
@@ -78,7 +80,11 @@
         <div class="keywords-container">
             <h2>Palabras clave</h2>
             <ul>
-                <li v-for="keyword in keywords" :key="keyword.id">{{ keyword.name }}</li>
+                <li v-for="keyword in keywords" :key="keyword.id">
+                    <a href="#" @click.prevent="goToKeywordDetails(keyword.id, keyword.name)">
+                        {{ keyword.name }}
+                    </a>
+                </li>
             </ul>
         </div>
 
@@ -170,6 +176,12 @@
                     localStorage.removeItem(`rating_${movieId}`);
                     userRating.value = 0;
                 };
+                const goToGenreDetails = (genreId, genreName, type) => {
+                    window.location.href = `DetalleCategoria.html?id=${genreId}&name=${genreName}&type=${type}`;
+                };
+                const goToKeywordDetails = (keywordId, keywordName, type) => {
+                    window.location.href = `DetallePalabraClave.html?id=${keywordId}&name=${keywordName}&type=${type}`; 
+                };
 
                 onMounted(() => {
                     fetchMovie(movieId);
@@ -196,7 +208,9 @@
                     goHome() {
                         window.location.href = 'home.html';
                     },
-                    goToMovie
+                    goToMovie,
+                    goToGenreDetails,
+                    goToKeywordDetails
                 };
             },
 
