@@ -76,12 +76,15 @@
                     window.location.href = 'home.html';
                   } else {
                     console.error('Error al iniciar sesión:', sessionData.status_message);
+                    alert('Error al iniciar sesión: ' + sessionData.status_message);
                   }
                 } else {
                   console.error('Error al validar el token:', validateData.status_message);
+                  alert('Usuario o contraseña incorrectos');
                 }
               } catch (error) {
                 console.error('Error durante el inicio de sesión:', error);
+                 alert('Error durante el inicio de sesión. Por favor, inténtelo de nuevo.');
               }
             }
 

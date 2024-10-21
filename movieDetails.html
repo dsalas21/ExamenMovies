@@ -82,16 +82,21 @@
 
         <!-- Recomendaciones -->
         <div class="recommendations-container">
-            <h2>Recomendaciones</h2>
-            <div class="recommendations-carousel">
-                <div class="recommendation" v-for="rec in recomendaciones" :key="rec.id">
-                    <img :src="rec.poster_path ? 'https://image.tmdb.org/t/p/w500' + rec.poster_path : ''" 
-                        alt="Poster de {{ rec.title }}" 
-                        class="recommendation-poster">
-                    <h3>{{ rec.title }}</h3>
-                </div>
-            </div>
-        </div>  
+    <h2>Recomendaciones</h2>
+    <div class="recommendations-carousel">
+        <div class="recommendation" 
+             v-for="rec in recomendaciones" 
+               :key="rec.id" 
+               @click="goToMovie(rec.id)" 
+               class="clickable-recommendation">
+                <img :src="rec.poster_path ? 'https://image.tmdb.org/t/p/w500' + rec.poster_path : ''" 
+                 alt="Poster de {{ rec.title }}" 
+                 class="recommendation-poster">
+               <h3>{{ rec.title }}</h3>
+               </div>
+         </div>
+</div>
+
     </div>
 
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -110,6 +115,10 @@
                 const userRating = ref(0);
 
                 const apiKey = '9613de54abfdef52d6a1ca920c995060';
+
+                const goToMovie = (id) => {
+                window.location.href = `movieDetails.html?id=${id}`;
+                };
 
                 const fetchMovie = async (id) => {
                     const movieResponse = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&language=es-MX`);
@@ -188,7 +197,8 @@
                     deleteRate,
                     goHome() {
                         window.location.href = 'home.html';  
-                    }
+                    },
+                    goToMovie
                 };
             }
         }).mount('#app');
