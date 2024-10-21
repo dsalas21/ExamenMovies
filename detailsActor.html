@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles Actor</title>
+    <link rel="stylesheet" href="styleDetailsActor.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="app">
+
+        <nav>
+
+
+            <img src="casa.png" @click=" redirectToHome" class="clickable-image">
+            <div class="user">
+
+                <img src="usuario.png">
+                Sesion Iniciada como:
+            </div>
+        </nav>
+
+        <br><br><br> <br>
+
+        <hr>
+        <div class="detailsActor-container">
+
+            <div class="left-column">
+
+                <div class="detailsActorleft-container">
+
+                    <div class="actorImage" v-if="actor"
+                        :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${actor.profile_path})` }">
+                    </div>
+                    <!-- <img :src="`https://image.tmdb.org/t/p/w500/${actor.profile_path}`"
+                        alt="Foto de perfil de {{ actor.name }}"> -->
+                    <h3>Información Personal:</h3>
+                    <p v-if="actor">Conocido por: {{ actor.known_for_department }}</p>
+                    <p v-if="actor">Sexo: {{ actor.gender === 1 ? 'Femenino' : 'Masculino' }}</p>
+                    <p v-if="actor">Cumpleaños: {{ actor.birthday }}</p>
+                    <p v-if="actor">Lugar de Nacimiento: {{ actor.place_of_birth }}</p>
+                    <p v-if="actor">También Conocido Como:
+                        <br>
+                        {{ actor.also_known_as.join(',') }}
+                    </p>
+                </div>
+            </div>
+
+
+
+            <div class="right-row1">
+                <h2 v-if="actor && actor.name"> {{ actor.name }}</h2>
+                <h3 v-if="actor && actor.biography">Biografía:</h3>
+                <p v-if="actor && actor.biography && actor.biography.length > 0">
+                    {{ isExpanded ? actor.biography : actor.biography.slice(0, 200) + (actor.biography.length > 200 ?
+                    '...' : '') }}
+                </p>
+                <button v-if="actor && actor.biography && actor.biography.length > 200"
+                    @click="isExpanded = !isExpanded">
+                    {{ isExpanded ? 'Leer menos' : 'Leer más' }}
+                </button>
+
+
+
+
+                <br>
+                <br>
+                <h3 v-if="actorTv.length > 0"> Series en las que ha participado:</h3>
+                <div v-if="actorTv.length > 0" class="tvActor-container">
+                    <div class="card" v-for="tv in actorTv" :key="tv.id" @click="redirectToDetails(tv.id)">
+                        <div class="card-image"
+                            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${tv.poster_path})` }">
+                        </div>
+                        <div class="bar">
+                            <h3 class="title">{{ tv.original_name }}</h3>
+                            <div class="rating">
+                                <img src="corazon.png">
+                                {{ tv.vote_average }}
+                            </div>
+                            <div class="fecha">{{ tv.first_air_date }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 v-if="actorMovies.length > 0"> Peliculas en las que ha participado:</h3>
+                <div v-if="actorMovies.length > 0" class="moviesActor-container">
+                    <div class="card" v-for="movie in actorMovies" :key="movie.id" @click="redirectToMovieDetails(movie.id)">
+                        <div class="card-image"
+                            :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }">
+                        </div>
+                        <div class="bar">
+                            <h3 class="title">{{ movie.title }}</h3>
+                            <div class="rating">
+                                <img src="corazon.png">
+                                {{ movie.vote_average }}
+                            </div>
+                            <div class="fecha">{{ movie.release_date }}</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+            <div class="right-row2">
+                <h3> Actuo en:</h3>
+                <ul class="movie-list">
+                    <li v-for="movie in movieCredits" :key="movie.id">
+                        {{ movie.title }} ({{ new Date(movie.release_date).getFullYear() }})
+                    </li>
+                </ul>
+
+            </div>
+
+
+        </div>
+
+
+
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script>
+
+            const { createApp, ref } = Vue;
+            const urlParams = new URLSearchParams(window.location.search);
+            const actorId = urlParams.get('id');
+            createApp({
+                setup() {
+                    const actor = ref(null);
+                    const isExpanded = ref(false);
+                    const movieCredits = ref([]);
+                    const actorMovies = ref([]);
+                    const actorTv = ref([]);
+
+                    const fetchActorDetails = async (actorId) => {
+                        try {
+                            const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}?language=en-US`, {
+                                headers: {
+                                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+                                    'accept': 'application/json'
+                                }
+                            });
+                            const data = await response.json();
+                            actor.value = data;
+                            
+                        } catch (error) {
+                            console.error('Error al obtener los detalles del actor:', error);
+                        }
+                    };
+
+
+
+
+
+                    const fetchMovieCredits = async (actorId) => {
+                        try {
+                            const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/combined_credits?language=es-MX`, {
+                                headers: {
+                                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+                                    'accept': 'application/json'
+                                }
+                            });
+
+
+                            if (!response.ok) {
+                                throw new Error(`Error al obtener los créditos de películas: ${response.status}`);
+                            }
+
+                            const data = await response.json();
+                            console.log(data);
+
+                            const filteredMovieCredits = data.cast
+                                .filter(credit => credit.media_type === 'movie' && credit.release_date)
+                                .sort((a, b) => new Date(b.release_date).getFullYear() - new Date(a.release_date).getFullYear());
+
+                            movieCredits.value = filteredMovieCredits;
+                        } catch (error) {
+                            console.error('Error al obtener los créditos de películas:', error);
+                        }
+                    };
+
+
+                    const fetchActorMovies = async () => {
+                        try {
+                            const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?language=es-MX`, {
+                                headers: {
+                                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+                                    'accept': 'application/json'
+                                }
+                            });
+                            const data = await response.json();
+                            actorMovies.value = data.cast;
+                        } catch (error) {
+                            console.error('Error al obtener películas del actor:', error);
+                        }
+                    };
+
+
+                    const fetchActorTv = async () => {
+                        try {
+                            const response = await fetch(`https://api.themoviedb.org/3/person/${actorId}/tv_credits?language=es-MX`, {
+                                headers: {
+                                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1ZmY3NTQxNDdmZDNlZWQ1Y2ZjOGVlY2Q2OGM5OTBkMCIsIm5iZiI6MTcyODk3MzExNS44MDg3MTksInN1YiI6IjY3MDc2ZmE3ZDA2MTZjN2IxOWZiMzg2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.qYsfL57ntOCQMRpvPTUGO61X-BPtm1C8DpDtAxfLNXg',
+                                    'accept': 'application/json'
+                                }
+                            });
+                            const data = await response.json();
+                            actorTv.value = data.cast;
+                        } catch (error) {
+                            console.error('Error al obtener series de TV del actor:', error);
+                        }
+                    };
+
+
+
+
+
+
+                    fetchMovieCredits(actorId);
+                    fetchActorDetails(actorId);
+                    fetchActorMovies(actorId);
+                    fetchActorTv(actorId);
+                    return {
+                        actor,
+                        isExpanded,
+                        movieCredits,
+                        actorMovies,
+                        actorTv,
+
+                    };
+                }, methods: {
+
+                    redirectToHome() {
+
+                        window.location.href = 'home.html';
+                    },
+                    redirectToDetails(tvId) {
+                        window.location.href = `DetalleSerie.html?id=${tvId}`;
+                    },
+                    redirectToMovieDetails(movieId) {
+                        window.location.href = `movieDetails.html?id=${movieId}`;
+                    }
+                    
+
+
+
+
+
+                }
+            }).mount('#app');
+
+
+
+
+
+
+            let lastScrollTop = 0;
+            const navBar = document.querySelector('nav');
+
+            window.addEventListener('scroll', function () {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop) {
+
+                    navBar.style.top = "-80px";
+                } else {
+                    // Scrolling up
+                    navBar.style.top = "0";
+                }
+
+                lastScrollTop = scrollTop;
+            });
+
+
+
+        </script>
+
+</body>
+
+
+
+
+</html>
