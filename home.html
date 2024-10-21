@@ -14,13 +14,13 @@
 <body>
   <div id="app">
     <nav>
-      <button @click="">Cerrar Sesión</button>
+      <button @click="logout">Cerrar Sesión</button>
 
       <img src="casa.png" @click="hola" class="clickable-image">
       <div class="user">
 
-        <img src="usuario.png">
-        Sesion Iniciada como:
+        <img src="usuario.png" alt="usuario">
+        Sesion Iniciada como:  <span>{{ username }}</span>
       </div>
 
 
@@ -55,7 +55,7 @@
 
       <h3>Peliculas en Tendencia</h3>
       <div class="moviesTrendig-container">
-        <div class="card" v-for="movie in trendingMovies" :key="movie.id" @click="hola">
+        <div class="card" v-for="movie in trendingMovies" :key="movie.id" @click="redirectToMovieDetails(movie.id)">
           <div class="card-image"
             :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
           <div class="bar">
@@ -73,7 +73,7 @@
       </h3>
 
       <div class="moviesPopular-container">
-        <div class="card" v-for="movie in popularMovies" :key="movie.id" @click="hola">
+        <div class="card" v-for="movie in popularMovies" :key="movie.id"  @click="redirectToMovieDetails(movie.id)">
           <div class="card-image"
             :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
           <div class="bar">
@@ -92,7 +92,7 @@
       </h3>
 
       <div class="moviesWatchNow-container">
-        <div class="card" v-for="movie in watchNowMovies" :key="movie.id" @click="hola">
+        <div class="card" v-for="movie in watchNowMovies" :key="movie.id"  @click="redirectToMovieDetails(movie.id)">
           <div class="card-image"
             :style="{ backgroundImage: `url(https://image.tmdb.org/t/p/w500/${movie.poster_path})` }"></div>
           <div class="bar">
@@ -143,6 +143,7 @@
         const popularMovies = ref([]);
         const watchNowMovies = ref([]);
         const popularTv = ref([]);
+        const username = ref(localStorage.getItem('username') || 'Invitado');
 
 
         const fetchTrendingMovies = async () => {
@@ -162,6 +163,12 @@
           } catch (error) {
             console.error('Error al obtener películas en tendencia:', error);
           }
+        };
+
+        const logout = () => {
+          localStorage.removeItem('username');
+          localStorage.removeItem('token'); 
+          window.location.href = 'login.html'; 
         };
 
 
@@ -230,19 +237,21 @@
           trendingMovies,
           popularMovies,
           popularTv,
-          watchNowMovies
+          watchNowMovies,
+          username,
+          logout
         };
       },
       methods: {
 
-        hola() {
+        hola(movieId) {
 
-          console.log("hola")
 
+        window.location.href = `movieDetails.html?id=${movieId}`;
         },
-        hola2() {
-          console.log("hola2")
-        },
+        redirectToMovieDetails(movieId) {
+    window.location.href = `movieDetails.html?id=${movieId}`;
+  },
         redirectToDetails(tvId) {
           window.location.href = `DetalleSerie.html?id=${tvId}`;
         }
