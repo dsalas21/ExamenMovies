@@ -109,7 +109,12 @@
                 goHome(){
                     window.location.href = `home.html`;
 
-                }
+                },
+                logout(){
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('token'); 
+                    window.location.href = 'login.html'; 
+                },
             }
             
 
