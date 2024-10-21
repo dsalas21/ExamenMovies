@@ -13,7 +13,7 @@
     <div id="app">
         <nav>
             <button @click="">Cerrar Sesión</button>
-            <img src="casa.png" @click="hola" class="clickable-image">
+            <img src="casa.png" @click="goHome" class="clickable-image">
             <div class="user">
                 <img src="usuario.png">
             </div>
@@ -30,7 +30,7 @@
             </div>
 
             <div class="movies-container">
-                <div class="card" v-for="item in popularItems" :key="item.id">
+                <div class="card" v-for="item in popularItems" :key="item.id" @click="redirectToDetails(item)">
                     <div class="card-image" :style="{ backgroundImage: 'url(https://image.tmdb.org/t/p/w500/' + (item.poster_path || '') + ')' }"></div>
                     <div class="card-details">
                         <h3 class="title">{{ item.title || item.name }}</h3>
@@ -92,6 +92,7 @@
                     page.value += 1;
                     await loadItems(category.value);
                 };
+
                 const logout = () => {
                     localStorage.removeItem('username');
                     localStorage.removeItem('token');
@@ -102,8 +103,16 @@
                     window.location.href = 'home.html';
                 };
 
+                const redirectToDetails = (item) => {
+                    if (category.value === 'movie') {
+                        window.location.href = `movieDetails.html?id=${item.id}`;
+                    } else {
+                        window.location.href = `DetalleSerie.html?id=${item.id}`;
+                    }
+                };
+
                 fetchData();
-                return { popularItems, category, loadMore, keywordName, fetchData, logout, goHome };
+                return { popularItems, category, loadMore, keywordName, fetchData, logout, goHome, redirectToDetails };
             }
         }).mount('#app');
     </script>

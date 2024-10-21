@@ -29,14 +29,14 @@
             </div>
 
             <div class="movies-container">
-                <div class="card" v-for="item in popularItems" :key="item.id">
+                <div class="card" v-for="item in popularItems" :key="item.id" @click="redirectToDetails(item)">
                     <div class="card-image" :style="{ backgroundImage: 'url(https://image.tmdb.org/t/p/w500/' + item.poster_path + ')' }"></div>
                     <div class="card-details">
                         <h3 class="title">{{ item.title || item.name }}</h3>
                         <div class="fecha">{{ item.release_date || item.first_air_date }}</div>
                         <div class="description">{{ item.overview }}</div>
                     </div>
-                </div>
+                </div>                
             </div>
 
             <button class="load-more" @click="loadMore">Mostrar más resultados</button>
@@ -96,9 +96,17 @@
                 const goHome = () => {
                     window.location.href = 'home.html';
                 };
+                const redirectToDetails = (item) => {
+                    if (category.value === 'movie') {
+                        window.location.href = `movieDetails.html?id=${item.id}`;
+                    } else {
+                        window.location.href = `DetalleSerie.html?id=${item.id}`;
+                    }
+                };
+
 
                 fetchData();
-                return { popularItems, category, loadMore, genreName, fetchData, logout, goHome };
+                return { popularItems, category, loadMore, genreName, fetchData, logout, goHome, redirectToDetails };
             },
 
         }).mount('#app');
