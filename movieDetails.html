@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle de Película</title>
     <link rel="stylesheet" href="styleMovieDetails.css">
 </head>
+
 <body>
     <div id="app">
 
-         <nav>
+        <nav>
             <img src="casa.png" @click="goHome" class="clickable-image">
         </nav>
 
@@ -24,7 +26,7 @@
                     <div class="movie-card">
                         <img :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="Movie Poster">
                     </div>
-                    <div class="movie-details"> 
+                    <div class="movie-details">
                         <p><strong>Fecha de lanzamiento: </strong>{{ movie.release_date }}</p>
                         <p><strong>Duración: </strong>{{ movie.runtime }} minutos</p>
                         <p><strong>Descripción: </strong>{{ movie.overview }}</p>
@@ -35,7 +37,8 @@
                             </span>
                         </p>
                         <p class="rating">
-                            <span v-for="star in 5" :key="star" class="star" :class="{ filled: star <= Math.round(movie.vote_average / 2) }">&#9733;</span>
+                            <span v-for="star in 5" :key="star" class="star"
+                                :class="{ filled: star <= Math.round(movie.vote_average / 2) }">&#9733;</span>
                             <span class="rating-value">{{ movie.vote_average }}</span>
                         </p>
                     </div>
@@ -44,7 +47,7 @@
                 <input v-model="userRating" type="number" min="0" max="10" placeholder="Calificación (0-10)">
                 <button @click="rateMovie">Añadir Rate</button>
                 <button @click="deleteRate">Eliminar Rate</button>
-                
+
                 <!-- Botón de favoritos -->
                 <button @click="toggleFavorite">
                     {{ isFavorite ? 'Eliminar de favoritos' : 'Añadir a favoritos' }}
@@ -62,10 +65,9 @@
         <div class="cast-container">
             <h2>Reparto</h2>
             <div class="cast-carousel">
-                <div class="cast-member" v-for="member in cast" :key="member.id">
-                    <img :src="member.profile_path ? 'https://image.tmdb.org/t/p/w500' + member.profile_path : 'unknowPeople.png'" 
-                         alt="Foto de {{ member.name }}" 
-                         class="cast-member-photo">
+                <div class="cast-member" v-for="member in cast" :key="member.id"   @click="redirectToActorDetails(member.id)">
+                    <img :src="member.profile_path ? 'https://image.tmdb.org/t/p/w500' + member.profile_path : 'unknowPeople.png'"
+                        alt="Foto de {{ member.name }}" class="cast-member-photo">
                     <h3>{{ member.name }}</h3>
                     <p>Rol: {{ member.character }}</p>
                 </div>
@@ -82,20 +84,16 @@
 
         <!-- Recomendaciones -->
         <div class="recommendations-container">
-    <h2>Recomendaciones</h2>
-    <div class="recommendations-carousel">
-        <div class="recommendation" 
-             v-for="rec in recomendaciones" 
-               :key="rec.id" 
-               @click="goToMovie(rec.id)" 
-               class="clickable-recommendation">
-                <img :src="rec.poster_path ? 'https://image.tmdb.org/t/p/w500' + rec.poster_path : ''" 
-                 alt="Poster de {{ rec.title }}" 
-                 class="recommendation-poster">
-               <h3>{{ rec.title }}</h3>
-               </div>
-         </div>
-</div>
+            <h2>Recomendaciones</h2>
+            <div class="recommendations-carousel">
+                <div class="recommendation" v-for="rec in recomendaciones" :key="rec.id" @click="goToMovie(rec.id)"
+                    class="clickable-recommendation">
+                    <img :src="rec.poster_path ? 'https://image.tmdb.org/t/p/w500' + rec.poster_path : ''"
+                        alt="Poster de {{ rec.title }}" class="recommendation-poster">
+                    <h3>{{ rec.title }}</h3>
+                </div>
+            </div>
+        </div>
 
     </div>
 
@@ -104,7 +102,7 @@
         const { createApp, ref, onMounted } = Vue;
         const urlParams = new URLSearchParams(window.location.search);
         const movieId = urlParams.get('id');
-    
+
         createApp({
             setup() {
                 const movie = ref({});
@@ -117,7 +115,7 @@
                 const apiKey = '9613de54abfdef52d6a1ca920c995060';
 
                 const goToMovie = (id) => {
-                window.location.href = `movieDetails.html?id=${id}`;
+                    window.location.href = `movieDetails.html?id=${id}`;
                 };
 
                 const fetchMovie = async (id) => {
@@ -196,12 +194,26 @@
                     rateMovie,
                     deleteRate,
                     goHome() {
-                        window.location.href = 'home.html';  
+                        window.location.href = 'home.html';
                     },
                     goToMovie
                 };
+            },
+
+            methods: {
+
+                redirectToActorDetails(actorId) {
+                    window.location.href = `detailsActor.html?id=${actorId}`;
+                }
+
+
+
             }
+
+
+
         }).mount('#app');
     </script>
 </body>
+
 </html>

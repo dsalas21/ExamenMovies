@@ -92,7 +92,7 @@
             <h2>Reparto</h2>
             <!-- <button @click="scrollLeft">←</button> -->
             <div class="cast-carousel">
-                <div class="cast-member" v-for="member in cast" :key="member.id">
+                <div class="cast-member" v-for="member in cast" :key="member.id"  @click="redirectToActorDetails(member.id)">
                     <img :src="member.profile_path ? 'https://image.tmdb.org/t/p/w500' + member.profile_path : 'unknowPeople.png'" 
                          alt="Foto de {{ member.name }}" 
                          class="cast-member-photo">
@@ -417,6 +417,13 @@
                 redirectToDetailsSeason(idSeason,nameSeason,imgSeason) {
                     window.location.href = `DetalleTemporada.html?id=${tvId}&idSeason=${idSeason}&nameSeason=${nameSeason}&imgSeason=${imgSeason}`;
                 }, 
+
+                 redirectToActorDetails(actorId) {
+                    window.location.href = `detailsActor.html?id=${actorId}`;
+                },
+
+
+
 
                 goTvRecomended(tvId) {
 
