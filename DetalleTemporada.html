@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="styleDetalleTemporada.css">
 </head>
 <body>
+
+    
     <div id="app">
+
+        <nav>
+            <button @click="logout">Cerrar Sesión</button>
+      
+            <img src="casa.png" @click="hola" class="clickable-image">
+            <div class="user">
+      
+              <img src="usuario.png" alt="usuario">
+              Sesion Iniciada como:  <span>{{ username }}</span>
+            </div>
+      
+      
+        </nav>
+
+        
         <div class="background">
 
             <img :src="'https://image.tmdb.org/t/p/w500' + imgSeason" alt="Movie Poster">
@@ -88,6 +105,23 @@
                 };
             }
         }).mount('#app');
+
+        let lastScrollTop = 0;
+        const navBar = document.querySelector('nav');
+
+        window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+            
+            navBar.style.top = "-80px"; 
+        } else {
+            // Scrolling up
+            navBar.style.top = "0"; 
+        }
+
+        lastScrollTop = scrollTop;
+        });
     </script>
 </body>
 </html>

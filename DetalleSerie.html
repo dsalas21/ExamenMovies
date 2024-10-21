@@ -9,7 +9,22 @@
 </head>
 <body>
 
+   
     <div id="app">
+
+       
+        <nav>
+            <button @click="logout">Cerrar Sesión</button>
+      
+            <img src="casa.png" @click="hola" class="clickable-image">
+            <div class="user">
+      
+              <img src="usuario.png" alt="usuario">
+              Sesion Iniciada como:  <span>{{ username }}</span>
+            </div>
+      
+      
+        </nav>
         <div id="divDetailMovie">
             <div class="background">
                 <img :src="'https://image.tmdb.org/t/p/w500' + serie.poster_path" alt="Movie Poster">
@@ -133,6 +148,14 @@
                 const userRating = ref(0);
                 const message = ref('');
                 const palabrasClave = ref({}); 
+
+
+                const logout = () => {
+                    console.log("sadas")
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('token'); 
+                    window.location.href = 'login.html'; 
+                };
 
 
                 const showMessage = (msg) => {
@@ -489,6 +512,22 @@
 
 
         }).mount('#app');
+        let lastScrollTop = 0;
+        const navBar = document.querySelector('nav');
+
+        window.addEventListener('scroll', function () {
+        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollTop > lastScrollTop) {
+            
+            navBar.style.top = "-80px"; 
+        } else {
+            // Scrolling up
+            navBar.style.top = "0"; 
+        }
+
+        lastScrollTop = scrollTop;
+        });
 
     </script>
 </body>
