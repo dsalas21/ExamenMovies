@@ -1,3 +1,4 @@
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -5,6 +6,61 @@ body {
     height: 100%; 
     background: linear-gradient(to bottom, rgb(29, 28, 28), rgb(120, 120, 120));
 }
+
+
+
+/* estilo navbar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #64B5F6; 
+    padding: 1rem;
+    border-radius: 10px; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+
+    position: fixed; 
+    top: 0;
+    width: 97%;
+    transition: top 0.3s; 
+    z-index: 100;
+  }
+  
+  button {
+    background-color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #ff5858;
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+  }
+  
+  input[type="text"] {
+    padding: 0.5rem;
+    border: none;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+  }
+
+  .clickable-image:hover {
+    cursor: pointer;
+    pointer-events: auto; 
+    transform: scale(1.1); 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/*fin estilo navbar*/
 
 .background {
     width: 100%; 
@@ -346,3 +402,148 @@ h3{
     font-size: 1em;
     color: #ddd;
 }
+
+/*---- btn favorito y eliminar favorito*/
+
+.favorite-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 5px;
+}
+
+.favorite-button.add {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+.favorite-button.add:hover {
+    background-color: #45a049; 
+}
+
+.favorite-button.remove {
+    background-color: #f44336;
+    color: white;
+}
+
+.favorite-button.remove:hover {
+    background-color: #da190b; 
+}
+
+
+/*  estilos btn rate y input rate */
+
+.rating-input {
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 80px; 
+    margin-right: 10px; 
+    transition: border-color 0.3s ease;
+}
+
+.rating-input:focus {
+    border-color: #4CAF50; 
+    outline: none; 
+}
+
+.rate-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.rate-button:hover {
+    background-color: #45a049;
+}
+
+
+.remove-rate {
+    background-color: #f44336;
+    color: white;
+}
+
+.remove-rate:hover {
+    background-color: #da190b; 
+}
+
+
+
+.message {
+    position: fixed; 
+    top: 50%;
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    padding: 20px; 
+    background-color: rgba(43, 174, 172, 0.8); 
+    color: white;
+    border-radius: 8px; 
+    z-index: 1000; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+    text-align: center;
+}
+
+/*  palabras clave*/
+
+.palabrasClave-container {
+    background-color: #b9aeae; 
+    padding: 10px; 
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.552);
+    text-align: center; 
+    margin: 20px auto; 
+    width: 80%; 
+    max-width: 600px;
+    max-height: 400px; 
+    overflow-y: auto; 
+    margin-top: 7pc;
+}
+
+
+
+.palabrasClave-container h2 {
+    margin-bottom: 15px; 
+    font-size: 24px; 
+    color: #333; 
+}
+
+.palabraClave {
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+}
+
+.palabraClave {
+    background-color: #007bff; 
+    color: white;
+    padding: 10px 15px; 
+    border-radius: 20px; 
+    margin: 5px; 
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s; 
+    cursor: pointer;
+}
+
+.palabraClave:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); 
+}
+
+#txtPalabrasClave {
+    font-size: 40px;
+    margin-left: 70px;
+    color: #333; 
+    text-shadow: 0 0 10px rgb(255, 255, 255), 
+                 0 0 20px rgb(255, 255, 255); 
+}
+
+

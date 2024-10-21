@@ -13,8 +13,9 @@
 
         <nav>
             <button @click="logout">Cerrar Sesión</button>
-      
-            <img src="casa.png" @click="hola" class="clickable-image">
+           
+            <img src="casa.png" @click="goHome" class="clickable-image">
+           
             <div class="user">
       
               <img src="usuario.png" alt="usuario">
@@ -103,7 +104,16 @@
                     nameSeason,
                     imgSeason: imgSeason || defaultImg
                 };
+            },
+            methods: {
+                goHome(){
+                    window.location.href = `home.html`;
+
+                }
             }
+            
+
+          
         }).mount('#app');
 
         let lastScrollTop = 0;

@@ -15,8 +15,9 @@
        
         <nav>
             <button @click="logout">Cerrar Sesión</button>
-      
-            <img src="casa.png" @click="hola" class="clickable-image">
+           
+            <img src="casa.png" @click="goHome" class="clickable-image">
+           
             <div class="user">
       
               <img src="usuario.png" alt="usuario">
@@ -107,13 +108,12 @@
         <div class="recommendations-container">
             <h2>Recomendaciones</h2>
             <div class="recommendations-carousel">
-                <div class="recommendation" v-for="rec in recomendaciones" :key="rec.id">
+                <div class="recommendation" v-for="rec in recomendaciones" :key="rec.id" @click="goTvRecomended(rec.id)">
 
                     <img :src="rec.poster_path ? 'https://image.tmdb.org/t/p/w500' + rec.poster_path : ''" 
                         alt="Poster de {{ rec.name }}" 
                         class="recommendation-poster">
                     <h3>{{ rec.name }}</h3>
-                  
                 </div>
             </div>
         </div>  
@@ -417,6 +417,17 @@
                 redirectToDetailsSeason(idSeason,nameSeason,imgSeason) {
                     window.location.href = `DetalleTemporada.html?id=${tvId}&idSeason=${idSeason}&nameSeason=${nameSeason}&imgSeason=${imgSeason}`;
                 }, 
+
+                goTvRecomended(tvId) {
+
+
+                    window.location.href = `DetalleSerie.html?id=${tvId}`;
+
+                }, 
+                goHome(){
+                    window.location.href = `home.html`;
+
+                },
               
                 removeFavoriteSerie(idSerie) {
                     const sessionId = localStorage.getItem('session_id');
